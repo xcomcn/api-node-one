@@ -7,9 +7,10 @@ WORKDIR /app
 # 优先复制 package.json 和 package-lock.json 以利用 Docker 缓存
 COPY package*.json ./
 
-RUN npm config set registry https://registry.npmmirror.com
-# 安装所有依赖
-RUN npm ci
+# 修复步骤
+RUN apk add --no-cache python3 make g++ && \
+    npm config set registry https://registry.npmmirror.com && \
+    npm ci --verbose  # 注意这里添加了详细日志
 
 # --- 阶段 2: 复制应用文件 ---
 FROM mirror.ccs.tencentyun.com/library/node:20-alpine AS app-files
