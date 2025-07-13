@@ -7,6 +7,7 @@ WORKDIR /app
 # 优先复制 package.json 和 package-lock.json 以利用 Docker 缓存
 COPY package*.json ./
 
+RUN npm config set registry https://registry.npmmirror.com
 # 安装所有依赖
 RUN npm ci
 
