@@ -1,45 +1,33 @@
-# --- 阶段 1: 构建依赖 ---
+# Stage 1: 安装生产依赖 & 准备应用
 FROM mirror.ccs.tencentyun.com/library/node:20-alpine AS builder
 
-# 设置工作目录
 WORKDIR /app
 
-# 优先复制 package.json 和 package-lock.json 以利用 Docker 缓存
+# 仅复制依赖清单以利用缓存
 COPY package*.json ./
 
-# 修复步骤
-RUN apk add --no-cache python3 make g++ && \
-    npm config set registry https://registry.npmmirror.com && \
-    npm ci --verbose  # 注意这里添加了详细日志
+# 切换镜像源并安装生产依赖
+RUN npm config set registry https://registry.npmmirror.com \
+  && npm ci --production --verbose
 
-# --- 阶段 2: 复制应用文件 ---
-FROM mirror.ccs.tencentyun.com/library/node:20-alpine AS app-files
-
-# 设置工作目录
-WORKDIR /app
-
-# 复制所有应用源代码
+# 复制应用源代码
 COPY . .
 
-# --- 阶段 3: 生产环境镜像 ---
+# Stage 2: 生成最终运行镜像
 FROM mirror.ccs.tencentyun.com/library/node:20-alpine
 
-# 设置最终镜像的工作目录
 WORKDIR /app
 
-# 从前一阶段复制所需文件
-# 从 'builder' 阶段复制 node_modules
-COPY --from=builder /app/node_modules ./node_modules
-# 从 'app-files' 阶段复制应用文件
-COPY --from=app-files /app/src ./src
-COPY --from=app-files /app/ecosystem.config.cjs ./ecosystem.config.cjs
-COPY --from=app-files /app/package.json ./package.json
+# 明确生产环境变量
+ENV NODE_ENV=production
 
-# 暴露 Express 应用端口
+# 拷贝生产依赖与应用代码
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/src ./src
+COPY --from=builder /app/ecosystem.config.cjs ./
+COPY --from=builder /app/package.json ./
+
 EXPOSE 3000
 
-# 使用 PM2 启动应用
+# 使用 PM2 启动
 CMD ["pm2-runtime", "start", "ecosystem.config.cjs", "--no-daemon"]
-
-# 如果不需要 PM2，可以使用以下命令
-# CMD ["node", "src/index.js"]
