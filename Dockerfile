@@ -1,4 +1,6 @@
-FROM mirror.ccs.tencentyun.com/library/node:22
+# FROM mirror.ccs.tencentyun.com/library/node:22
+FROM registry.cn-hangzhou.aliyuncs.com/library/node:22
+
 
 WORKDIR /app
 
