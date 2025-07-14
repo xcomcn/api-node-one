@@ -1,4 +1,4 @@
-FROM mirror.ccs.tencentyun.com/library/node:22.17.0-alpine
+FROM my-node:22.17.0-alpine
 
 
 WORKDIR /app
