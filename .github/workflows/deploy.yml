@@ -10,6 +10,11 @@ jobs:
   deploy:
     runs-on: self-hosted
 
+    # 开启调试日志
+    env:
+      ACTIONS_STEP_DEBUG: true
+      ACTIONS_RUNNER_DEBUG: true
+
     steps:
       - name: 检出代码 # 步骤名称
         uses: actions/checkout@v4
@@ -34,3 +39,13 @@ jobs:
 
       - name: 清理旧 Docker 镜像 # 步骤名称
         run: docker image prune -f
+
+      - name: 上传调试日志
+        if: failure()
+        uses: actions/upload-artifact@v3
+        with:
+          name: docker-debug-logs
+          path: |
+            ${{ runner.temp }}/_diag/**          # Runner 自身诊断日志
+            /var/log/docker/*.log                 # Docker 守护进程日志
+            /var/lib/docker/containers/*/*.log    # 各容器标准输出/错误日志
