@@ -5,7 +5,7 @@ WORKDIR /app
 COPY . .
 
 RUN npm config set registry https://registry.npmmirror.com
-RUN npm ci
+RUN npm install
 
 EXPOSE 3000
 
