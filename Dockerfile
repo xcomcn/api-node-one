@@ -4,8 +4,8 @@ WORKDIR /app
 
 COPY . .
 
-RUN npm config set registry https://registry.npmmirror.com \
-  && npm ci  --verbose
+RUN npm config set registry https://registry.npmmirror.com
+RUN npm ci
 
 EXPOSE 3000
 
