@@ -11,4 +11,4 @@ RUN npm install
 EXPOSE 3000
 
 # 使用 PM2 启动
-CMD ["pm2-runtime", "start", "ecosystem.config.cjs", "--no-daemon"]
+CMD ["npm", "run", "dev"]
