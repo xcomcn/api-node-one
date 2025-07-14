@@ -39,13 +39,3 @@ jobs:
 
       - name: 清理旧 Docker 镜像 # 步骤名称
         run: docker image prune -f
-
-      - name: 上传调试日志
-        if: failure()
-        uses: actions/upload-artifact@v4
-        with:
-          name: docker-debug-logs
-          path: |
-            ${{ runner.temp }}/_diag/**          # Runner 自身诊断日志
-            /var/log/docker/*.log                 # Docker 守护进程日志
-            /var/lib/docker/containers/*/*.log    # 各容器标准输出/错误日志
