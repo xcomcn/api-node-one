@@ -13,7 +13,11 @@ app.use(express.json());
 // 挂载路由
 app.use("/api/users", userRouter);
 
-const PORT = process.env.PORT || 3000;
+app.use((req, res) => {
+  res.status(404).json({ error: "接口未找到", path: req.originalUrl });
+});
+
+const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`服务启动 ${PORT}`);
 });

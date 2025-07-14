@@ -6,7 +6,7 @@ services:
     image: api-node-one:latest # 确保这个标签和 deploy.yml 中构建的标签一致
     container_name: api-node-one_container
     ports:
-      - "3000:3000" # 将宿主机的 80 端口映射到容器的 3000 端口
+      - "5000:5000" # 将宿主机的 80 端口映射到容器的 5000 端口
     restart: always # 容器退出后自动重启
     volumes:
       - ./logs:/app/logs # 将宿主机 docker-compose.yml 所在目录下的 logs 文件夹映射到容器的 /app/logs

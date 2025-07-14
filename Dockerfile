@@ -8,7 +8,7 @@ COPY . .
 RUN npm config set registry https://registry.npmmirror.com
 RUN npm install
 
-EXPOSE 3000
+EXPOSE 5000
 
 # 使用 PM2 启动
 CMD ["npm", "run", "dev"]
