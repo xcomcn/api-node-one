@@ -18,7 +18,7 @@ app.use((req, res) => {
 });
 
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-  console.log(`服务启动 ${PORT}`);
+app.listen(PORT, "::", () => {
+  console.log(`服务启动 ${PORT} 监听 IPv6 和 IPv4`);
 });
 ``;
